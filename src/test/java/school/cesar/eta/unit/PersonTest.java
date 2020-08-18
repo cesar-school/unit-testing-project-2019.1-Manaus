@@ -2,61 +2,166 @@ package school.cesar.eta.unit;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import java.time.LocalDate;
+
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonTest {
     @Test
     public void getName_firstNameJonLastNameSnow_jonSnow() {
-        fail();
+        Person person = new Person();
+        person.setName("Jon");
+        person.setLastName("Snow");
+        String name = person.getFirstName();
+        String lastname = person.getLastName();
+        assertTrue(name == "Jon" && lastname == "Snow");
+//        fail("Name should not be true");
     }
 
     @Test
     public void getName_firstNameJonNoLastName_jon() {
-        fail();
+        Person person = new Person();
+        person.setName("Jon");
+        person.setLastName(null);
+        String name = person.getFirstName();
+        String lastname = person.getLastName();
+        assertTrue(name == "Jon");
+
     }
 
     @Test
     public void getName_noFirstNameLastNameSnow_snow() {
-        fail();
+        Person person = new Person();
+        person.setName(null);
+        person.setLastName("Snow");
+        String name = person.getFirstName();
+        String lastname = person.getLastName();
+        assertTrue(lastname == "Snow");
+
     }
 
     @Test
     public void getName_noFirstNameNorLastName_throwsException() {
-        fail();
+        Person person = new Person();
+        person.setName(null);
+        person.setLastName(null);
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            Integer.parseInt("Name must be filled");
+        });
+
+        String expectedMessage = "Name must be filled";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+
     }
 
     @Test
     public void isBirthdayToday_differentMonthAndDay_false() {
-        fail();
+        Person person = new Person();
+        person.setBirthday(LocalDate.now());
+        LocalDate receivedDate = person.getBirthday();
+        int ReceivedDay = receivedDate.getDayOfMonth();
+        int expectedDay = person.getNow().getDayOfMonth()+1;
+        int expectedMonth = person.getNow().getMonthValue()+1;
+        int receivedMonth = receivedDate.getMonthValue();
+        assertFalse(ReceivedDay==expectedDay);
+        assertFalse(expectedMonth==receivedMonth);
     }
 
     @Test
     public void isBirthdayToday_sameMonthDifferentDay_false() {
-        fail();
+
+        Person person = new Person();
+        LocalDate date = LocalDate.now();
+        person.setBirthday(LocalDate.of(1989,date.getMonthValue(), date.getDayOfMonth()+1));
+        LocalDate receivedDate = person.getBirthday();
+        int ReceivedDay = receivedDate.getDayOfMonth();
+        int expectedDay = date.getDayOfMonth();
+        int expectedMonth = person.getNow().getMonthValue();
+        int receivedMonth = date.getMonthValue();
+        assertFalse(ReceivedDay==expectedDay);
+        assertTrue(expectedMonth==receivedMonth);
+//        fail();
     }
 
     @Test
     public void isBirthdayToday_sameMonthAndDay_true() {
-        fail();
+        Person person = new Person();
+        LocalDate date = LocalDate.now();
+        person.setBirthday(LocalDate.of(1989,date.getMonthValue(), date.getDayOfMonth()));
+        LocalDate receivedDate = person.getBirthday();
+        int ReceivedDay = receivedDate.getDayOfMonth();
+        int expectedDay = date.getDayOfMonth();
+        int expectedMonth = person.getNow().getMonthValue();
+        int receivedMonth = date.getMonthValue();
+        assertTrue(ReceivedDay==expectedDay);
+        assertTrue(expectedMonth==receivedMonth);
     }
 
     @Test
     public void addToFamily_somePerson_familyHasNewMember() {
-        fail();
+
+        Person person = new Person();
+        person.setName("Mistercleng");
+        person.setLastName("Goncalves");
+        person.setBirthday(LocalDate.of(1989,3,23));
+        person.addToFamily(person);
+        boolean family = person.isFamily(person);
+        assertTrue(family);
     }
 
     @Test
     public void addToFamily_somePerson_personAddedAlsoHasItsFamilyUpdated() {
-        fail();
+        Person person = new Person();
+        person.setName("Mistercleng");
+        person.setLastName("Goncalves");
+        person.setBirthday(LocalDate.of(1989,3,23));
+        person.addToFamily(person);
+        String oldname = person.getFirstName();
+        person.setName("Mister");
+        person.addToFamily(person);
+        String nome = person.getFirstName();
+        assertTrue(nome != oldname);
+
     }
 
     @Test
     public void isFamily_nonRelativePerson_false() {
-        fail();
+        Person person = new Person();
+        person.setName("Mistercleng");
+        person.setLastName("Goncalves");
+        person.setBirthday(LocalDate.of(1989,3,23));
+        person.addToFamily(person);
+        Person oldperson = person;
+        person.isFamily(oldperson);
+        String oldname = person.getFirstName();
+        person.setName("Mistercleng");
+        person.setLastName("Goncalves");
+        person.setBirthday(LocalDate.of(1989,3,23));
+        person.addToFamily(person);
+        Person newperson = person;
+        person.isFamily(newperson);
+        assertFalse(oldperson != newperson);
     }
 
     @Test
     public void isFamily_relativePerson_true() {
-        fail();
+        Person person = new Person();
+        person.setName("Mistercleng");
+        person.setLastName("Goncalves");
+        person.setBirthday(LocalDate.of(1989,3,23));
+        person.addToFamily(person);
+        Person oldperson = person;
+        person.isFamily(oldperson);
+        String oldname = person.getFirstName();
+        person.setName("Mistercleng");
+        person.setLastName("Goncalves");
+        person.setBirthday(LocalDate.of(1989,3,23));
+        person.addToFamily(person);
+        Person newperson = person;
+        person.isFamily(newperson);
+        assertTrue(oldperson == newperson);
     }
 }
