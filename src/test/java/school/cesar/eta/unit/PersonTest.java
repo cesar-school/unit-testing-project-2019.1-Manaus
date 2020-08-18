@@ -133,17 +133,9 @@ public class PersonTest {
         person.setName("Mistercleng");
         person.setLastName("Goncalves");
         person.setBirthday(LocalDate.of(1989,3,23));
-        person.addToFamily(person);
-        Person oldperson = person;
-        person.isFamily(oldperson);
-        String oldname = person.getFirstName();
-        person.setName("Mistercleng");
-        person.setLastName("Goncalves");
-        person.setBirthday(LocalDate.of(1989,3,23));
-        person.addToFamily(person);
-        Person newperson = person;
-        person.isFamily(newperson);
-        assertFalse(oldperson != newperson);
+        boolean familia = person.isFamily(person);
+        assertFalse(familia);
+
     }
 
     @Test
@@ -153,15 +145,7 @@ public class PersonTest {
         person.setLastName("Goncalves");
         person.setBirthday(LocalDate.of(1989,3,23));
         person.addToFamily(person);
-        Person oldperson = person;
-        person.isFamily(oldperson);
-        String oldname = person.getFirstName();
-        person.setName("Mistercleng");
-        person.setLastName("Goncalves");
-        person.setBirthday(LocalDate.of(1989,3,23));
-        person.addToFamily(person);
-        Person newperson = person;
-        person.isFamily(newperson);
-        assertTrue(oldperson == newperson);
+        boolean familia = person.isFamily(person);
+        assertTrue(familia);
     }
 }
