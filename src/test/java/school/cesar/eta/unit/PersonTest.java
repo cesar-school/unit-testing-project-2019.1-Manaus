@@ -1,6 +1,7 @@
 package school.cesar.eta.unit;
 
 import org.junit.jupiter.api.Test;
+import sun.font.SunFontManager;
 
 import java.time.LocalDate;
 
@@ -16,7 +17,6 @@ public class PersonTest {
         String name = person.getFirstName();
         String lastname = person.getLastName();
         assertTrue(name == "Jon" && lastname == "Snow");
-//        fail("Name should not be true");
     }
 
     @Test
@@ -60,7 +60,8 @@ public class PersonTest {
     @Test
     public void isBirthdayToday_differentMonthAndDay_false() {
         Person person = new Person();
-        person.setBirthday(LocalDate.now());
+        LocalDate date =LocalDate.now();
+        person.setBirthday(LocalDate.of(1989,date.getMonthValue(), date.getDayOfMonth()));
         LocalDate receivedDate = person.getBirthday();
         int ReceivedDay = receivedDate.getDayOfMonth();
         int expectedDay = person.getNow().getDayOfMonth()+1;
@@ -115,37 +116,39 @@ public class PersonTest {
     @Test
     public void addToFamily_somePerson_personAddedAlsoHasItsFamilyUpdated() {
         Person person = new Person();
+        Person familyUpdate = new Person();
         person.setName("Mistercleng");
         person.setLastName("Goncalves");
         person.setBirthday(LocalDate.of(1989,3,23));
-        person.addToFamily(person);
-        String oldname = person.getFirstName();
-        person.setName("Mister");
-        person.addToFamily(person);
-        String nome = person.getFirstName();
-        assertTrue(nome != oldname);
+        person.addToFamily(familyUpdate);
+        assertTrue(person.isFamily(familyUpdate));
 
     }
 
     @Test
     public void isFamily_nonRelativePerson_false() {
         Person person = new Person();
+        Person personnonRelative = new Person();
         person.setName("Mistercleng");
         person.setLastName("Goncalves");
         person.setBirthday(LocalDate.of(1989,3,23));
-        boolean familia = person.isFamily(person);
-        assertFalse(familia);
-
+        personnonRelative.setName("Priscila");
+        personnonRelative.setLastName("Goncalves");
+        personnonRelative.setBirthday(LocalDate.of(1985,6,2));
+        assertFalse(person.isFamily(personnonRelative));
     }
 
     @Test
     public void isFamily_relativePerson_true() {
         Person person = new Person();
+        Person personrelative = new Person();
         person.setName("Mistercleng");
         person.setLastName("Goncalves");
         person.setBirthday(LocalDate.of(1989,3,23));
-        person.addToFamily(person);
-        boolean familia = person.isFamily(person);
-        assertTrue(familia);
+        personrelative.setName("Priscila");
+        personrelative.setLastName("Goncalves");
+        personrelative.setBirthday(LocalDate.of(1985,6,2));
+        person.addToFamily(personrelative);
+        assertTrue(person.isFamily(personrelative));
     }
 }
