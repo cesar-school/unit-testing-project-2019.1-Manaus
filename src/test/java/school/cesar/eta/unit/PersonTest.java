@@ -105,11 +105,9 @@ public class PersonTest {
     public void addToFamily_somePerson_familyHasNewMember() {
 
         Person person = new Person();
-        person.setName("Mistercleng");
-        person.setLastName("Goncalves");
-        person.setBirthday(LocalDate.of(1989,3,23));
-        person.addToFamily(person);
-        boolean family = person.isFamily(person);
+        Person relative = new Person();
+        person.addToFamily(relative);
+        boolean family = person.isFamily(relative);
         assertTrue(family);
     }
 
@@ -117,38 +115,22 @@ public class PersonTest {
     public void addToFamily_somePerson_personAddedAlsoHasItsFamilyUpdated() {
         Person person = new Person();
         Person familyUpdate = new Person();
-        person.setName("Mistercleng");
-        person.setLastName("Goncalves");
-        person.setBirthday(LocalDate.of(1989,3,23));
         person.addToFamily(familyUpdate);
-        assertTrue(person.isFamily(familyUpdate));
-
+        familyUpdate.addToFamily(person);
+        assertTrue(person.isFamily(familyUpdate)&&familyUpdate.isFamily(person));
     }
 
     @Test
     public void isFamily_nonRelativePerson_false() {
         Person person = new Person();
-        Person personnonRelative = new Person();
-        person.setName("Mistercleng");
-        person.setLastName("Goncalves");
-        person.setBirthday(LocalDate.of(1989,3,23));
-        personnonRelative.setName("Priscila");
-        personnonRelative.setLastName("Goncalves");
-        personnonRelative.setBirthday(LocalDate.of(1985,6,2));
-        assertFalse(person.isFamily(personnonRelative));
+
+        assertFalse(person.isFamily(person));
     }
 
     @Test
     public void isFamily_relativePerson_true() {
         Person person = new Person();
-        Person personrelative = new Person();
-        person.setName("Mistercleng");
-        person.setLastName("Goncalves");
-        person.setBirthday(LocalDate.of(1989,3,23));
-        personrelative.setName("Priscila");
-        personrelative.setLastName("Goncalves");
-        personrelative.setBirthday(LocalDate.of(1985,6,2));
-        person.addToFamily(personrelative);
-        assertTrue(person.isFamily(personrelative));
+        person.addToFamily(person);
+        assertTrue(person.isFamily(person));
     }
 }
