@@ -1,7 +1,6 @@
 package school.cesar.eta.unit;
 
 import org.junit.jupiter.api.Test;
-import sun.font.SunFontManager;
 
 import java.time.LocalDate;
 
@@ -9,6 +8,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonTest {
+
     @Test
     public void getName_firstNameJonLastNameSnow_jonSnow() {
         Person person = new Person();
@@ -61,44 +61,33 @@ public class PersonTest {
     public void isBirthdayToday_differentMonthAndDay_false() {
         Person person = new Person();
         LocalDate date =LocalDate.now();
-        person.setBirthday(LocalDate.of(1989,date.getMonthValue(), date.getDayOfMonth()));
-        LocalDate receivedDate = person.getBirthday();
-        int ReceivedDay = receivedDate.getDayOfMonth();
-        int expectedDay = person.getNow().getDayOfMonth()+1;
-        int expectedMonth = person.getNow().getMonthValue()+1;
-        int receivedMonth = receivedDate.getMonthValue();
-        assertFalse(ReceivedDay==expectedDay);
-        assertFalse(expectedMonth==receivedMonth);
+        LocalDate dataAniversario = LocalDate.of(1989,mesAlterado(date.getMonthValue()), date.getDayOfMonth());
+        person.setBirthday(dataAniversario);
+
+        assertFalse(person.isBirthdayToday());
     }
 
     @Test
     public void isBirthdayToday_sameMonthDifferentDay_false() {
-
         Person person = new Person();
-        LocalDate date = LocalDate.now();
-        person.setBirthday(LocalDate.of(1989,date.getMonthValue(), date.getDayOfMonth()+1));
-        LocalDate receivedDate = person.getBirthday();
-        int ReceivedDay = receivedDate.getDayOfMonth();
-        int expectedDay = date.getDayOfMonth();
-        int expectedMonth = person.getNow().getMonthValue();
-        int receivedMonth = date.getMonthValue();
-        assertFalse(ReceivedDay==expectedDay);
-        assertTrue(expectedMonth==receivedMonth);
+        LocalDate date =LocalDate.now();
+        LocalDate dataAniversario = LocalDate.of(1989,date.getMonthValue(), diaAlterado(date.getDayOfMonth()));
+        person.setBirthday(dataAniversario);
+
+        assertFalse(person.isBirthdayToday());
+
 //        fail();
     }
 
     @Test
     public void isBirthdayToday_sameMonthAndDay_true() {
         Person person = new Person();
-        LocalDate date = LocalDate.now();
-        person.setBirthday(LocalDate.of(1989,date.getMonthValue(), date.getDayOfMonth()));
-        LocalDate receivedDate = person.getBirthday();
-        int ReceivedDay = receivedDate.getDayOfMonth();
-        int expectedDay = date.getDayOfMonth();
-        int expectedMonth = person.getNow().getMonthValue();
-        int receivedMonth = date.getMonthValue();
-        assertTrue(ReceivedDay==expectedDay);
-        assertTrue(expectedMonth==receivedMonth);
+        LocalDate date =LocalDate.now();
+        LocalDate dataAniversario = LocalDate.of(1989,date.getMonthValue(), date.getDayOfMonth());
+        person.setBirthday(dataAniversario);
+
+        assertTrue(person.isBirthdayToday());
+
     }
 
     @Test
@@ -133,4 +122,24 @@ public class PersonTest {
         person.addToFamily(person);
         assertTrue(person.isFamily(person));
     }
+
+
+    public int diaAlterado(int dia){
+        if(dia >= 29) {
+            return dia -= 1;
+        }else{
+            return dia +=1;
+        }
+    }
+
+    public int mesAlterado(int mes){
+        if(mes >= 29) {
+            return mes -= 1;
+        }else{
+            return mes +=1;
+        }
+    }
+
+
+
 }
