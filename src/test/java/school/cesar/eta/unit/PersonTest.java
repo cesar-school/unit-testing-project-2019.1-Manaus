@@ -2,22 +2,34 @@ package school.cesar.eta.unit;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions;
+
+import java.time.LocalDate;
 
 public class PersonTest {
     @Test
     public void getName_firstNameJonLastNameSnow_jonSnow() {
-        fail();
+        Person person = new Person();
+        person.setName("Jon");
+        person.setLastName("Snow");
+        assertTrue("Jon",person.getFirstName());
+        assertTrue("Snow",person.getLastName());
     }
 
     @Test
     public void getName_firstNameJonNoLastName_jon() {
-        fail();
+        Person person = new Person();
+        person.setName("Jon");
+        assertTrue("Jon",person.getFirstName());
+        Assertions.assertNull(person.getLastName());
     }
 
     @Test
     public void getName_noFirstNameLastNameSnow_snow() {
-        fail();
+        Person person = new Person();
+        person.setLastName("Snow");
+        Assertions.assertNull(person.getLastName());
+        assertTrue("Snow",person.getLastName());
     }
 
     @Test
