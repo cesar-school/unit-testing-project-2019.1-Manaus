@@ -1,62 +1,163 @@
 package school.cesar.eta.unit;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+//import sun.jvm.hotspot.utilities.Assert;
+//import sun.jvm.hotspot.utilities.Assert;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PersonTest {
+
+    /*OK TERMINADA*/
     @Test
     public void getName_firstNameJonLastNameSnow_jonSnow() {
-        fail();
+
+        Person JonSnow = new Person();
+        JonSnow.setName("Jon");
+        JonSnow.setLastName("Snow");
+        String firstName = JonSnow.getFirstName();
+        String lastName = JonSnow.getLastName();
+        assertEquals(JonSnow.getName(),"JonSnow");
+
     }
 
+    /*OK TERMINADA*/
     @Test
     public void getName_firstNameJonNoLastName_jon() {
-        fail();
+        Person JonSnow = new Person();
+        JonSnow.setName("Jon");
+        JonSnow.setLastName(null);
+        String firstName = JonSnow.getFirstName();
+        String lastName = JonSnow.getLastName();
+        assertEquals(JonSnow.getName(),"Jon");
+
     }
 
+    /*OK TERMINADA*/
     @Test
     public void getName_noFirstNameLastNameSnow_snow() {
-        fail();
+        Person JonSnow = new Person();
+        JonSnow.setName(null);
+        JonSnow.setLastName("Snow");
+        String firstName = JonSnow.getFirstName();
+        String lastName = JonSnow.getLastName();
+        assertEquals(JonSnow.getName(),"Snow");
+
     }
 
+    /*OK TERMINADA*/
     @Test
     public void getName_noFirstNameNorLastName_throwsException() {
-        fail();
+        Person JonSnow = new Person();
+        JonSnow.setName(null);
+        JonSnow.setLastName(null);
+        Exception exception = assertThrows(RuntimeException.class, () ->
+                JonSnow.getName());
+        assertEquals("Name must be filled", exception.getMessage());
+
     }
 
+    /*OK TERMINADA*/
     @Test
     public void isBirthdayToday_differentMonthAndDay_false() {
-        fail();
+        Person JonSnow = new Person();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String myday = "1889-01-21";
+        LocalDate birthday = LocalDate.parse(myday, formatter);
+        JonSnow.setBirthday(birthday);
+        JonSnow.getBirthday();
+        assertFalse(JonSnow.isBirthdayToday());
+
     }
 
+    /*OK TERMINADA*/
     @Test
     public void isBirthdayToday_sameMonthDifferentDay_false() {
-        fail();
+        Person JonSnow = new Person();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String myday = "1889-01-21";
+        LocalDate birthday = LocalDate.parse(myday, formatter);
+        JonSnow.setBirthday(birthday);
+        JonSnow.getBirthday();
+        assertFalse(JonSnow.isBirthdayToday());
+
     }
 
+    /*OK TERMINADA*/
     @Test
     public void isBirthdayToday_sameMonthAndDay_true() {
-        fail();
+        Person jonSnow = new Person();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String myday = "1889-01-21";
+        LocalDate birthday = LocalDate.parse(myday, formatter);
+        jonSnow.setBirthday(birthday);
+        jonSnow.getBirthday();
+        assertTrue(jonSnow.isBirthdayToday());
+
     }
 
+
+    /*OK TERMINADA*/
     @Test
     public void addToFamily_somePerson_familyHasNewMember() {
-        fail();
+
+        Person Jon = new Person();
+        Person Arya = new Person();
+
+        Jon.addToFamily(Arya);
+
+        Assertions.assertTrue(Jon.isFamily(Arya));
+
+
+/*codigos para o terminal
+* git add .
+* git commit -m "Atividade de testes unitarios"
+* git pull
+*
+* */
+
+
+
+
+
     }
 
+    /*OK TERMINADA*/
     @Test
     public void addToFamily_somePerson_personAddedAlsoHasItsFamilyUpdated() {
-        fail();
+        Person Jon = new Person();
+        Person Arya = new Person();
+        Jon.addToFamily(Arya);
+
+
+        Assertions.assertTrue(Jon.isFamily(Arya));
+        Assertions.assertTrue(Arya.isFamily(Jon));
     }
 
+
+/*ACHO QUE ESTA TERMINADO*/
     @Test
     public void isFamily_nonRelativePerson_false() {
-        fail();
+        Person Jon = new Person();
+        Person Tyrion = new Person();
+
+        assertFalse(Jon.isFamily(Tyrion));
+
+
     }
 
+    /*NÃO TERMINADO*/
     @Test
     public void isFamily_relativePerson_true() {
-        fail();
+        Person Jon = new Person();
+        Person Arya = new Person();
+
     }
 }
