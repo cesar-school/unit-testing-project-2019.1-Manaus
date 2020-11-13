@@ -1,14 +1,13 @@
 package school.cesar.eta.unit;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
-
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class PersonTest {
-    Person p = new Person();
+    //Person p = new Person();
+    PersonStub p = new PersonStub();
 
     @Test
     public void getName_firstNameJonLastNameSnow_jonSnow() {
@@ -37,54 +36,56 @@ public class PersonTest {
 
     @Test
     public void getName_noFirstNameNorLastName_throwsException() {
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            p.getName();
-        });
+        Assertions.assertThrows(RuntimeException.class, () -> p.getName());
     }
 
     @Test
     public void isBirthdayToday_differentMonthAndDay_false() {
-        LocalDate tdy = LocalDate.now();
-        int tmwr_m = differentMonth(tdy.getMonthValue());
-        int tmwr_d = differentDay(tdy.getDayOfMonth());
-        LocalDate bday = LocalDate.of(1985, tmwr_m, tmwr_d);
+        LocalDate bday = LocalDate.of(1985, 11, 19);
         p.setBirthday(bday);
-        Assertions.assertFalse(p.isBirthdayToday());
+        Assertions.assertFalse(p.isBirthdayTodayStub(LocalDate.of(1985, 12, 2)));
 
     }
 
 
     @Test
     public void isBirthdayToday_sameMonthDifferentDay_false() {
-        LocalDate tdy = LocalDate.now();
-        int tmwr_m = tdy.getMonthValue();
-        int tmwr_d = differentDay(tdy.getDayOfMonth());
-        LocalDate bday = LocalDate.of(1985, tmwr_m, tmwr_d);
+        LocalDate bday = LocalDate.of(1985, 11, 19);
         p.setBirthday(bday);
-        Assertions.assertFalse(p.isBirthdayToday());
+        Assertions.assertFalse(p.isBirthdayTodayStub(LocalDate.of(1985, 11, 2)));
     }
 
     @Test
     public void isBirthdayToday_sameMonthAndDay_true() {
-        LocalDate bday = LocalDate.now();
+        LocalDate bday = LocalDate.of(1985, 11, 19);
         p.setBirthday(bday);
-        Assertions.assertTrue(p.isBirthdayToday());
+        Assertions.assertTrue(p.isBirthdayTodayStub(LocalDate.of(1985, 11, 19)));
     }
 
     @Test
     public void addToFamily_somePerson_familyHasNewMember() {
         Person rltve = new Person();
-        Assertions.assertFalse(p.isFamily(rltve));
         p.addToFamily(rltve);
-        Assertions.assertTrue(p.isFamily(rltve));
+        List<Person> family = p.GetFamily();
+
+        for (Person f : family) {
+            if (f == rltve) {
+                Assertions.assertTrue(true);
+            }
+        }
+
+        Assertions.assertFalse(false);
     }
 
     @Test
     public void addToFamily_somePerson_personAddedAlsoHasItsFamilyUpdated() {
-        Person rltve = new Person();
-        Assertions.assertFalse(rltve.isFamily(p));
-        rltve.addToFamily(p);
-        Assertions.assertTrue(rltve.isFamily(p));
+        PersonStub rltve = new PersonStub();
+        List<Person> previous = rltve.GetFamily();
+        rltve.addToFamily(new Person());
+        List<Person> current = rltve.GetFamily();
+
+        Assertions.assertFalse(previous.size() != current.size());
+
     }
 
     @Test
@@ -95,27 +96,20 @@ public class PersonTest {
 
     @Test
     public void isFamily_relativePerson_true() {
-      Person prlt = new Person();
-      p.addToFamily(prlt);
-      Assertions.assertTrue(p.isFamily(prlt));
+        PersonStub rltve = new PersonStub();
+        p.addToFamily(rltve);
+        Person rltveb = new Person();
+        rltve.addToFamily(rltveb);
 
-    }
+        List<Person> family = rltve.GetFamily();
 
-    private int differentDay(int day){
-        if (day >=28){
-            day = day - 1;
-        }else{
-            day = day + 1;
+        for (Person f : family) {
+            if (f == rltveb) {
+                Assertions.assertTrue(true);
+            }
         }
-        return day;
+
+        Assertions.assertFalse(false);
     }
 
-    private int differentMonth(int month){
-        if (month == 12){
-            month = month - 1;
-        }else{
-            month = month + 1;
-        }
-        return month;
-    }
 }

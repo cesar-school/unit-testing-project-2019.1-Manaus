@@ -8,7 +8,7 @@ public class Person {
     private String firstName = null;
     private String lastName = null;
     private LocalDate birthday;
-    private List<Person> family = new ArrayList<Person>();
+    protected List<Person> family = new ArrayList<Person>();
 
     public LocalDate getNow() {
         return LocalDate.now();
