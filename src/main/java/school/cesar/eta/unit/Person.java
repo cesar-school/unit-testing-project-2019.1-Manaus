@@ -10,9 +10,7 @@ public class Person {
     private LocalDate birthday;
     private List<Person> family = new ArrayList<Person>();
 
-    public LocalDate getNow() {
-        return LocalDate.now();
-    }
+    public LocalDate getNow() { return LocalDate.now();}
 
     public String getFirstName() {
         return firstName;

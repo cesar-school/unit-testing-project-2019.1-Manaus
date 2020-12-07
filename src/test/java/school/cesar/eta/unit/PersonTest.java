@@ -1,110 +1,137 @@
 package school.cesar.eta.unit;
 
-import org.junit.jupiter.api.Assertions;
+import org.easymock.IMockBuilder;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import java.time.LocalDate;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+
+import static org.mockito.Mockito.*;
+import java.time.LocalDate;
+import java.time.Year;
+import java.util.List;
+
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
 public class PersonTest {
+    @InjectMocks
+    Person mockperson;
+    @Spy
+    List<Person> family;
+
     @Test
     public void getName_firstNameJonLastNameSnow_jonSnow() {
         Person person = new Person();
         person.setName("Jon");
         person.setLastName("Snow");
-        Assertions.assertEquals("Jon",person.getFirstName());
-        Assertions.assertEquals("Snow",person.getLastName());
+        String name = person.getName();
+        assertEquals("JonSnow",name);
     }
 
     @Test
     public void getName_firstNameJonNoLastName_jon() {
         Person person = new Person();
         person.setName("Jon");
-        Assertions.assertEquals("Jon",person.getFirstName());
-        Assertions.assertNull(person.getLastName());
+        String name = person.getName();
+        assertEquals("Jon",name);
     }
 
     @Test
     public void getName_noFirstNameLastNameSnow_snow() {
         Person person = new Person();
         person.setLastName("Snow");
-        Assertions.assertNull(person.getFirstName());
-        Assertions.assertEquals("Snow",person.getLastName());
+        String name = person.getName();
+        assertEquals("Snow",name);
     }
 
     @Test
     public void getName_noFirstNameNorLastName_throwsException() {
         Person person = new Person();
-        String msgExpected = "Name must be filled";
-
-        Throwable exception = Assertions.assertThrows(RuntimeException.class, () -> person.getName());
-        String msgActual = exception.getMessage();
-        Assertions.assertEquals(msgExpected,msgActual);
+        Exception thrown = assertThrows(Exception.class, () -> person.getName(),
+                "Name must be filled");
+        assertTrue(thrown.getMessage().contains("Name must be filled"));
     }
 
     @Test
     public void isBirthdayToday_differentMonthAndDay_false() {
-        Person person = new Person();
-        LocalDate date =LocalDate.now();
-        person.setBirthday(LocalDate.of(1987,date.getMonthValue(), date.getDayOfMonth()));
-        LocalDate birthday = person.getBirthday();
-        int ReceivedDay = birthday.getDayOfMonth();
-        int expectedDay = person.getNow().getDayOfMonth()+1;
-        int expectedMonth = person.getNow().getMonthValue()+1;
-        int receivedMonth = birthday.getMonthValue();
-        Assertions.assertFalse(ReceivedDay==expectedDay);
-        Assertions.assertFalse(expectedMonth==receivedMonth);
+        Person person = new Person(){
+            @Override
+            public LocalDate getNow() {
+                return LocalDate.of(1989,03,23);
+            }
+        };
+
+        person.setBirthday(LocalDate.of(1989,04,22));
+
+        assertFalse(person.isBirthdayToday());
 
     }
 
     @Test
     public void isBirthdayToday_sameMonthDifferentDay_false() {
-        LocalDate today = LocalDate.now();
-        Person person = new Person();
-        int differentDay = today.getDayOfMonth()+1;
-        LocalDate dateExpec = LocalDate.of(today.getYear(), today.getMonth(), differentDay);
-        person.setBirthday(dateExpec);
-        Assertions.assertFalse(person.isBirthdayToday());
+        Person person = new Person(){
+            @Override
+            public LocalDate getNow() {
+                return LocalDate.of(1989,03,23);
+            }
+        };
+
+        person.setBirthday(LocalDate.of(1989,03,22));
+
+        assertFalse(person.isBirthdayToday());
+
     }
 
     @Test
     public void isBirthdayToday_sameMonthAndDay_true() {
-        Person person = new Person();
-        LocalDate birthday =  LocalDate.now();
-        person.setBirthday(birthday);
-        Assertions.assertTrue(person.isBirthdayToday());
+        Person person = new Person(){
+            @Override
+            public LocalDate getNow() {
+                return LocalDate.of(1989,03,23);
+            }
+        };
+
+        person.setBirthday(LocalDate.of(1989,03,23));
+
+        assertTrue(person.isBirthdayToday());
+
+
     }
+
 
     @Test
     public void addToFamily_somePerson_familyHasNewMember() {
         Person person = new Person();
-        Person newMember = new Person();
-        person.addToFamily(newMember);
-        boolean family = person.isFamily(newMember);
-        Assertions.assertTrue(family);
+        mockperson.addToFamily(person);
+        verify(family, times(1)).add(person);
     }
 
     @Test
     public void addToFamily_somePerson_personAddedAlsoHasItsFamilyUpdated() {
         Person person = new Person();
-        Person familyUpdate = new Person();
-        person.addToFamily(familyUpdate);
-        familyUpdate.addToFamily(person);
-        boolean isFamily = person.isFamily(familyUpdate)&&familyUpdate.isFamily(person);
-        Assertions.assertTrue(isFamily);
-
+        person.addToFamily(mockperson);
+        verify(family, times(1)).add(person);
     }
 
     @Test
     public void isFamily_nonRelativePerson_false() {
         Person person = new Person();
-        boolean isFamily = person.isFamily(person);
-        Assertions.assertFalse(isFamily);
+        Person person2 = new Person();
+        assertFalse(person.isFamily(person2));
     }
 
     @Test
     public void isFamily_relativePerson_true() {
-        Person person = new Person();
-        person.addToFamily(person);
-        boolean isFamily = person.isFamily(person);
-        Assertions.assertTrue(isFamily);
+        Person relative = new Person();
+        when(family.contains(relative)).thenReturn(true);
+        assertTrue(mockperson.isFamily(relative));
     }
+
+
 }
